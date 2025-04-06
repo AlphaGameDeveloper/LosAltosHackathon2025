@@ -74,10 +74,16 @@ export function MailLoadingAnimation({
                     }
                     @keyframes receiveHit {
                         0%, 30% { transform: translateX(0) rotate(0); }
-                        40% { transform: translateX(8px) rotate(15deg); }
-                        50% { transform: translateX(12px) rotate(25deg); }
-                        70% { transform: translateX(5px) rotate(10deg); }
-                        100% { transform: translateX(0) rotate(0); }
+                        40% { transform: translateX(10px) rotate(20deg); }
+                        45% { transform: translateX(25px) rotate(60deg) scale(0.9); }
+                        50% { transform: translateX(60px) rotate(180deg) scale(0.8); }
+                        55% { transform: translateX(100px) rotate(360deg) scale(0.6); }
+                        60% { transform: translateX(150px) rotate(720deg) scale(0.4); }
+                        65% { transform: translateX(200px) rotate(1080deg) scale(0.2); opacity: 0.7; }
+                        70% { transform: translateX(250px) rotate(1440deg) scale(0.1); opacity: 0; }
+                        75% { transform: translateX(-50px) rotate(0) scale(0); opacity: 0; }
+                        85% { transform: translateX(-20px) rotate(0) scale(0.6); opacity: 0.7; }
+                        100% { transform: translateX(0) rotate(0) scale(1); opacity: 1; }
                     }
                     @keyframes swingBaton {
                         0% { transform: rotate(0); }
@@ -89,8 +95,8 @@ export function MailLoadingAnimation({
                         100% { transform: rotate(0); }
                     }
                     @keyframes showImpact {
-                        0%, 35%, 70%, 100% { opacity: 0; }
-                        40%, 55% { opacity: 1; }
+                        0%, 38%, 70%, 100% { opacity: 0; }
+                        40%, 50% { opacity: 1; }
                     }
                 `}
             </style>
