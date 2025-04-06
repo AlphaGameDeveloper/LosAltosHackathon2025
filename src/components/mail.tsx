@@ -2,6 +2,7 @@
 
 import * as React from "react"
 import { Search } from "lucide-react"
+import { v4 as uuidv4 } from "uuid"
 
 import { Input } from "@/components/ui/input"
 import {
@@ -38,6 +39,9 @@ interface EmailAPI {
   classification: string
   from: string
   subject: string
+  text: string
+  name: string
+  date: string
   timestamp: string
   to: string
 }
@@ -69,17 +73,15 @@ export function Mail({
       setLoading(true)
       try {
         var data; // Declare data variable here for scoping :3
-        const endpoint = "https://spam-assassin.boisvert.org:3000/?fromLogin=1"
+        const endpoint = "http://spam-assassin.boisvert.org:5000/api/emails"
         console.log(`[📤] Sending request to ${endpoint}`)
         const params = new URLSearchParams(window.location.search);
         console.log(`[🔍] Search params:`, params)
-        if (params.has("animtest")) {
-          return;
-        }
         if (!params.has("panic")) {
           console.log(`[✅] Panic mode is disabled, fetching data from ${endpoint}`)
           const res = await fetch(endpoint)
           data = await res.json()
+          data = data.data
           // dummy data
           if (!res.ok) {
             throw new Error("Network response was not ok")
@@ -142,16 +144,16 @@ export function Mail({
 
         if (count > lastCount) {
           const diff = count - lastCount;
-          const added = newEmails.slice(-diff).map((e, i) => ({
-            id: String(emails.length + i),
-            name: e.from,
-            email: e.from,
+          const added = newEmails.slice(-diff).map((e) => ({
+            id: e.uuid, // Use the UUID from the API response
+            name: e.name || "Unknown Sender",
+            email: e.email,
             subject: e.subject,
-            date: new Date().toISOString(),
-            text: e.body,
-            read: false,
+            date: e.date,
+            text: e.text,
+            read: e.read,
             classification: e.classification,
-            labels: [e.classification],
+            labels: e.labels || [],
           }))
           setEmails(prev => [...prev, ...added])
           setLastCount(count)
