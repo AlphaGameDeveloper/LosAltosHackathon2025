@@ -207,5 +207,47 @@
             "work"
         ],
         "classification": "spam"
+    },
+    {
+        "id": "e5b8c6f0-1a2b-4c6a-9e1a-0b2a3c4d5e6f",
+        "name": "PayPal",
+        "email": "service@paypal.com.tr",
+        "subject": "Your account has been limited!",
+        "text": "Dear user,\n\nWe have noticed suspicious activity on your account. For your protection, we have limited access to your account until we can verify your information.\n\nPlease click on the following link to verify your account: http://verify-paypal-account.com\n\nSincerely,\nPayPal Security Team",
+        "date": "2024-01-01T12:00:00",
+        "read": false,
+        "labels": [
+            "phishing",
+            "important"
+        ],
+        "classification": "spam"
+    },
+    {
+        "id": "f6c9d3a1-4b5e-4a7f-9c8a-6b7d9e8f0a1b",
+        "name": "Amazon",
+        "email": "security@amazon.com.verify",
+        "subject": "Important information about your Amazon order",
+        "text": "Dear customer,\n\nThere was a problem processing your recent order. To ensure that your order is processed correctly, please verify your payment information by clicking on the following link: http://amazon-order-verification.net\n\nThank you,\nAmazon Customer Service",
+        "date": "2024-01-05T15:00:00",
+        "read": false,
+        "labels": [
+            "phishing",
+            "important"
+        ],
+        "classification": "spam"
+    },
+    {
+        "id": "0a9b8c7d-6e5f-4a3b-8c2a-9d1e0f2a3c4b",
+        "name": "Bank of America",
+        "email": "alert@bankofamerica.net.login",
+        "subject": "Security Alert: Unusual Activity",
+        "text": "Dear Bank of America customer,\n\nWe have detected unusual activity on your account. To protect your account, please log in immediately and verify your recent transactions: http://bankofamerica-login.info\n\nSincerely,\nBank of America Security Department",
+        "date": "2024-01-10T08:00:00",
+        "read": false,
+        "labels": [
+            "phishing",
+            "important"
+        ],
+        "classification": "spam"
     }
 ]

@@ -10,6 +10,7 @@ export interface Email {
   subject: string
   timestamp: string
   to: string
+  uuid: string
 }
 
 export function useLiveMail() {

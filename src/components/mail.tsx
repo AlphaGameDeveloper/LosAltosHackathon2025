@@ -44,10 +44,16 @@ interface EmailAPI {
   date: string
   timestamp: string
   to: string
+  uuid: string
+  read: boolean
+  labels: string[]
+  email: string
 }
 
 interface MailItem {
   id: string
+  uuid: string
+
   name: string
   email: string
   subject: string
@@ -146,6 +152,7 @@ export function Mail({
           const diff = count - lastCount;
           const added = newEmails.slice(-diff).map((e) => ({
             id: e.uuid, // Use the UUID from the API response
+            uuid: e.uuid,
             name: e.name || "Unknown Sender",
             email: e.email,
             subject: e.subject,

@@ -1,4 +1,5 @@
 import { addDays, addHours, format, nextSaturday } from "date-fns"
+import { useState, useEffect } from "react"
 
 import {
   Archive,
@@ -44,6 +45,34 @@ interface MailDisplayProps {
 }
 export function MailDisplay({ mail }: MailDisplayProps) {
   const today = new Date()
+  const [spamReason, setSpamReason] = useState("")
+
+  useEffect(() => {
+    if (mail && mail.classification === "spam" && mail.uuid) {
+      const fetchSpamReason = async () => {
+        try {
+          setSpamReason("Loading reason...")
+          const response = await fetch(
+            `http://127.0.0.1:5000/api/emails/${mail.uuid}/why-is-it-spam`
+          )
+          const data = await response.json()
+          if (data.ok) {
+            setSpamReason(data.data.answer)
+          } else {
+            console.error("Error fetching spam reason:", data)
+            setSpamReason("Failed to fetch reason.")
+          }
+        } catch (error) {
+          console.error("Error fetching spam reason:", error)
+          setSpamReason("Failed to fetch reason.")
+        }
+      }
+
+      fetchSpamReason()
+    } else {
+      setSpamReason("No reason because it's not spam") // Clear the reason if the mail is not spam or null
+    }
+  }, [mail])
 
   return (
     <>
@@ -214,7 +243,7 @@ export function MailDisplay({ mail }: MailDisplayProps) {
             <Separator className="mt-auto" />
             <div className="flex items-start gap-4 text-sm">
               <SpamLabel isSpam={mail.classification == "spam"} />
-              Reason
+              {spamReason ? `Reason: ${spamReason}` : "Reason"}
             </div>
             <Separator className="mt-auto" />
             <div className="flex-1 whitespace-pre-wrap p-4 text-sm">
