@@ -20,6 +20,7 @@ import { TooltipProvider } from "@/components/ui/tooltip"
 import { AccountSwitcher } from "@/components/account-switcher"
 import { MailDisplay } from "@/components/mail-display"
 import { MailList } from "@/components/mail-list"
+import { MailLoadingAnimation } from "@/components/mail-loading-animation"
 import { useMail } from "../app/use-mail"
 
 interface MailProps {
@@ -60,15 +61,20 @@ export function Mail({
   const [emails, setEmails] = React.useState<MailItem[]>([])
   const [lastCount, setLastCount] = React.useState(0)
   const [isCollapsed, setIsCollapsed] = React.useState(false)
+  const [loading, setLoading] = React.useState(true)
 
   React.useEffect(() => {
     const fetchEmails = async () => {
+      setLoading(true)
       try {
         var data; // Declare data variable here for scoping :3
         const endpoint = "https://spam-assassin.boisvert.org:3000/?fromLogin=1"
         console.log(`[📤] Sending request to ${endpoint}`)
         const params = new URLSearchParams(window.location.search);
         console.log(`[🔍] Search params:`, params)
+        if (params.has("animtest")) {
+          return;
+        }
         if (!params.has("panic")) {
           console.log(`[✅] Panic mode is disabled, fetching data from ${endpoint}`)
           const res = await fetch(endpoint)
@@ -150,6 +156,8 @@ export function Mail({
         }
       } catch (err) {
         console.error("[❌] Error fetching mail:", err)
+      } finally {
+        setLoading(false)
       }
     }
 
@@ -193,10 +201,18 @@ export function Mail({
               </form>
             </div>
             <TabsContent value="all" className="m-0">
-              <MailList items={emails} />
+              {loading && emails.length === 0 ? (
+                <MailLoadingAnimation message="Checking your inbox..." />
+              ) : (
+                <MailList items={emails} />
+              )}
             </TabsContent>
             <TabsContent value="unread" className="m-0">
-              <MailList items={emails.filter((item) => !item.read)} />
+              {loading && emails.filter((item) => !item.read).length === 0 ? (
+                <MailLoadingAnimation message="Checking unread messages..." />
+              ) : (
+                <MailList items={emails.filter((item) => !item.read)} />
+              )}
             </TabsContent>
           </Tabs>
         </ResizablePanel>
