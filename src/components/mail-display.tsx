@@ -41,19 +41,27 @@ import {
 import { Mail } from "../app/data"
 import { SpamLabel } from "./ui/spam-label"
 
+// Extend the Mail type to include uuid
+interface ExtendedMail extends Mail {
+  uuid?: string;
+}
+
 function randomInt(min: number, max: number) {
   return Math.floor(Math.random() * (max - min + 1)) + min
 }
+
 interface MailDisplayProps {
-  mail: Mail | null
+  mail: ExtendedMail | null
 }
+
 export function MailDisplay({ mail }: MailDisplayProps) {
   const today = new Date()
   const [spamReason, setSpamReason] = useState("")
   const [isSpamApi, setIsSpamApi] = useState<number | null>(null)
 
   useEffect(() => {
-    if (mail && mail.uuid) {
+    // Use optional chaining to safely access uuid
+    if (mail?.uuid) {
       const fetchSpamReason = async () => {
         try {
           setSpamReason("Loading reason...")
