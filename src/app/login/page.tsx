@@ -2,6 +2,7 @@
 
 import * as React from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { Mail } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -18,10 +19,14 @@ import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 
 export default function LoginPage() {
-  const handleSubmit = (e: React.FormEvent) => {
+  const router = useRouter();
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // No authentication logic yet as per requirements
     console.log("Login form submitted");
+
+    await fetch("/api/set-login-cookie");
+    router.push("/?fromLogin=1&_isProductionReadyModeAreWeFucked=1");
   };
 
   return (
@@ -50,16 +55,16 @@ export default function LoginPage() {
             <div className="space-y-2">
               <div className="flex items-center justify-between">
                 <Label htmlFor="password">Password</Label>
-                  <Link
-                    href="#"
-                    onClick={(e) => {
-                      alert("Well, that's kind of embarassing; we don't have that yet.\n\nThat's a you problem now!");
-                      e.preventDefault();
-                    }}
-                    className="text-sm text-primary hover:underline"
-                  >
-                    Forgot password?
-                  </Link>
+                <Link
+                  href="#"
+                  onClick={(e) => {
+                    alert("Well, that's kind of embarrassing; we don't have that yet.\n\nThat's a you problem now!");
+                    e.preventDefault();
+                  }}
+                  className="text-sm text-primary hover:underline"
+                >
+                  Forgot password?
+                </Link>
               </div>
               <Input
                 id="password"
@@ -68,11 +73,7 @@ export default function LoginPage() {
                 required
               />
             </div>
-            <Button 
-              type="submit" 
-              className="w-full"
-              onClick={() => window.location.href = '/?fromLogin=1&_isProductionReadyModeAreWeFucked=1'}
-            >
+            <Button type="submit" className="w-full">
               Sign in
             </Button>
           </form>
@@ -86,9 +87,7 @@ export default function LoginPage() {
             </Link>
           </div>
           <Button variant="outline" className="w-full" asChild>
-            <Link href="/">
-              Back to home
-            </Link>
+            <Link href="/">Back to home</Link>
           </Button>
         </CardFooter>
       </Card>
