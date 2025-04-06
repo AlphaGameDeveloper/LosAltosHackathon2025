@@ -3,16 +3,15 @@ import Image from "next/image"
 import { redirect } from "next/navigation"
 
 import { Mail } from "@/components/mail"
-import { accounts, mails } from './data';
+import { accounts, mails } from './data'
 
 export default function MailPage({
   searchParams,
 }: {
   searchParams: { [key: string]: string | string[] | undefined };
 }) {
-  // Redirect to login if fromLogin query param is not present
   if (!searchParams.fromLogin) {
-    redirect('/login');
+    redirect('/login')
   }
 
   const layout = cookies().get("react-resizable-panels:layout:mail")

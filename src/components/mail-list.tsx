@@ -1,9 +1,9 @@
 import { ComponentProps } from "react"
 import { formatDistanceToNow } from "date-fns"
 
-import { cn } from "@/lib/utils"
 import { Badge } from "@/components/ui/badge"
 import { ScrollArea } from "@/components/ui/scroll-area"
+import { cn } from "@/lib/utils"
 import { Separator } from "@/components/ui/separator"
 import { Mail } from "../app/data"
 import { useMail } from "../app/use-mail"
@@ -21,10 +21,9 @@ export function MailList({ items }: MailListProps) {
         {items.map((item) => (
           <button
             key={item.id}
-            className={cn(
-              "flex flex-col items-start gap-2 rounded-lg border p-3 text-left text-sm transition-all hover:bg-accent",
-              mail.selected === item.id && "bg-muted"
-            )}
+            className={`flex flex-col items-start gap-2 rounded-lg border p-3 text-left text-sm transition-all hover:bg-accent ${
+              mail.selected === item.id ? "bg-muted" : ""
+            }`}
             onClick={() =>
               setMail({
                 ...mail,
@@ -41,12 +40,11 @@ export function MailList({ items }: MailListProps) {
                   )}
                 </div>
                 <div
-                  className={cn(
-                    "ml-auto text-xs",
+                  className={`ml-auto text-xs ${
                     mail.selected === item.id
                       ? "text-foreground"
                       : "text-muted-foreground"
-                  )}
+                  }`}
                 >
                   {formatDistanceToNow(new Date(item.date), {
                     addSuffix: true,
