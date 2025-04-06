@@ -35,9 +35,11 @@ DO NOT USE MARKDOWN - ONLY USE PLAIN TEXT
 You are a spam detection model. You will be given an email and you will have to answer the question: "Why is this email spam?".
 You will have to answer with a single line of text. The email is delimited by triple backticks.
 You will have to answer the question: "Why is this email spam?". You will have to answer with a single line of text. The email is delimited by triple backticks.
-
+don't add any extra text beyond what is strictly necessary to answer the question.
 Examples:
     - Suspicious activity alert and urgent verification link from an unsolicited message is commonly a spam technique.
+    - The email contains a suspicious link and asks for personal information.
+    - The link in the email seems to be impersonating a legitimate service.
     - The email contains a suspicious link and asks for personal information.
 
 ```
@@ -70,6 +72,25 @@ logger_config = {
 logging.basicConfig(**logger_config)
 # app.logger.basicConfig(**logger_config)
 
+def format_ai_response(response_text):
+    """
+    Format the AI response by removing unnecessary characters.
+    """
+    # Remove the <|end_of_text|> token and any trailing whitespace
+    formatted_response = response_text.replace("<|end_of_text|>", "å").strip()
+    final_response = ""
+    for character in formatted_response:
+        if character == "å":
+            break
+        final_response += character
+    # Return the formatted response
+    final_response = final_response.replace("*", "")
+    final_response = final_response.replace("`", "")
+    final_response = final_response.replace("\\", "")
+    final_response = final_response.replace("\n", "")
+
+    return final_response
+
 @app.route("/")
 @app.route("/api")
 def index():
@@ -96,12 +117,7 @@ def why_is_it_spam(uuid):
     )
     # get the answer
     choice = response.choices[0]
-    answer = choice.text.replace("<|end_of_text|>", "å").strip()
-    final_answer = ""
-    for character in answer:
-        if character == "å":
-            break
-        final_answer += character
+    final_answer = format_ai_response(choice.text)
     return jsonify({"answer": final_answer}), 200
 
 @app.route("/api/emails/<uuid>/is-it-spam", methods=["GET"])
@@ -121,20 +137,24 @@ def is_it_spam(uuid):
     )
     # get the answer
     choice = response.choices[0]
-    answer = choice.text.replace("<|end_of_text|>", "å").strip()
-    final_answer = ""
-    for character in answer:
-        if character == "å":
-            break
-        final_answer += character
-    if final_answer.strip().upper() == "YES":
+    answer = format_ai_response(choice.text)
+    app.logger.info(f"Answer: {answer}")
+    if answer.strip().upper() == "YES":
         final_answer = 1
-    elif final_answer.strip().upper() == "NO":
+    elif answer.strip().upper() == "NO":
         final_answer = 2
     else:
         final_answer = 0 # unsure
 
     return jsonify({"answer": final_answer}), 200
+
+@app.route("/api/send-email", methods=["POST"])
+def send_email():
+    content = request.json
+    if not content:
+        return jsonify({"error": "No content provided"}), 400
+    
+    required_fields = ()
 @app.after_request
 def add_cors_headers(response: Response):
     response.headers.add('Access-Control-Allow-Origin', '*')

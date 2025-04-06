@@ -79,7 +79,7 @@ export function Mail({
       setLoading(true)
       try {
         var data; // Declare data variable here for scoping :3
-        const endpoint = "http://spam-assassin.boisvert.org:5000/api/emails"
+        const endpoint = "http://127.0.0.1:5000/api/emails"
         console.log(`[📤] Sending request to ${endpoint}`)
         const params = new URLSearchParams(window.location.search);
         console.log(`[🔍] Search params:`, params)

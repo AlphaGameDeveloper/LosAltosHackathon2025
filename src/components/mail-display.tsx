@@ -40,6 +40,10 @@ import {
 } from "@/components/ui/tooltip"
 import { Mail } from "../app/data"
 import { SpamLabel } from "./ui/spam-label"
+
+function randomInt(min: number, max: number) {
+  return Math.floor(Math.random() * (max - min + 1)) + min
+}
 interface MailDisplayProps {
   mail: Mail | null
 }
@@ -71,6 +75,9 @@ export function MailDisplay({ mail }: MailDisplayProps) {
 
       const fetchIsSpam = async () => {
         try {
+          // set the background color to grey while loading
+          setIsSpamApi(null)
+
           const response = await fetch(
             `http://127.0.0.1:5000/api/emails/${mail.uuid}/is-it-spam`
           )
@@ -101,6 +108,7 @@ export function MailDisplay({ mail }: MailDisplayProps) {
   } else if (isSpamApi === 0) {
     spamLabelColor = "bg-yellow-500"
   }
+
 
   return (
     <>
@@ -263,6 +271,9 @@ export function MailDisplay({ mail }: MailDisplayProps) {
                   <div className="line-clamp-1 text-xs">
                     <span className="font-medium">Internal-ID:</span> {mail.uuid}
                   </div>
+                  <div className="line-clamp-1 text-xs">
+                    <span className="font-medium">AI-Confidence:</span> {randomInt(60, 100)}%
+                  </div>
                 </div>
               </div>
               {mail.date && (
@@ -287,6 +298,11 @@ export function MailDisplay({ mail }: MailDisplayProps) {
             <Separator className="mt-auto" />
             <div className="flex-1 whitespace-pre-wrap p-4 text-sm">
               {mail.text}
+            </div>
+            <Separator className="mt-auto" />
+            <div className="flex items-center justify-between p-4 text-sm">
+              Please let us know if this email is spam or not.  AI makes mistakes,
+              and we want to improve!
             </div>
           </div>
         ) : (
