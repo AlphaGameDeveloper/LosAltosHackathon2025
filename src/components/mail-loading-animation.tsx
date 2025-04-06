@@ -17,7 +17,7 @@ export function MailLoadingAnimation({
                         <div className="relative w-40 h-24">
                                 {/* Red envelope (spam) */}
                                 <div 
-                                    className="absolute right-0 top-1"
+                                    className="absolute right-12 top-1"
                                     style={{
                                         animation: `receiveHit ${animationDuration} infinite`,
                                     }}
@@ -27,7 +27,7 @@ export function MailLoadingAnimation({
                 
                 {/* Impact lines that appear during hit */}
                 <div 
-                    className="absolute right-0 top-0"
+                    className="absolute right-12 top-0"
                     style={{
                         animation: `showImpact ${animationDuration} infinite`,
                         opacity: 0,
@@ -49,9 +49,9 @@ export function MailLoadingAnimation({
                         <MailIcon className="h-12 w-12 text-primary" />
                         {/* Baton */}
                         <div 
-                            className="absolute h-2 w-6 bg-orange-900 rounded-full right-0 top-7"
+                            className="absolute h-2 w-6 bg-orange-900 rounded-full left-10 top-7"
                             style={{ 
-                                transformOrigin: "right center",
+                                transformOrigin: "left center",
                                 animation: `swingBaton ${animationDuration} infinite`
                             }}
                         ></div>
@@ -66,10 +66,10 @@ export function MailLoadingAnimation({
                         0% { transform: translateX(0) rotate(0); }
                         10% { transform: translateX(-3px) rotate(-5deg); }
                         20% { transform: translateX(0) rotate(5deg); }
-                        30% { transform: translateX(25px) rotate(0); }
-                        40% { transform: translateX(20px) rotate(-15deg); }
-                        60% { transform: translateX(20px) rotate(-10deg); }
-                        75% { transform: translateX(10px) rotate(0); }
+                        30% { transform: translateX(15px) rotate(0); }
+                        40% { transform: translateX(12px) rotate(-15deg); }
+                        60% { transform: translateX(12px) rotate(-10deg); }
+                        75% { transform: translateX(6px) rotate(0); }
                         100% { transform: translateX(0) rotate(0); }
                     }
                     @keyframes receiveHit {
