@@ -51,6 +51,7 @@ interface MailItem {
   text: string
   read: boolean
   labels: string[]
+  classification: string
 }
 
 export function Mail({
@@ -149,6 +150,7 @@ export function Mail({
             date: new Date().toISOString(),
             text: e.body,
             read: false,
+            classification: e.classification,
             labels: [e.classification],
           }))
           setEmails(prev => [...prev, ...added])

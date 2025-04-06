@@ -38,7 +38,7 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip"
 import { Mail } from "../app/data"
-
+import { SpamLabel } from "./ui/spam-label"
 interface MailDisplayProps {
   mail: Mail | null
 }
@@ -213,9 +213,9 @@ export function MailDisplay({ mail }: MailDisplayProps) {
           </div>
           <Separator className="mt-auto" />
           <div className="flex items-start gap-4 text-sm">
-              <h1>NOT SPAM</h1>
-              Reason
-            </div>
+            <SpamLabel isSpam={mail.classification == "spam"} />
+            Reason
+          </div>
           <Separator className="mt-auto" />
           <div className="flex-1 whitespace-pre-wrap p-4 text-sm">
             {mail.text}
