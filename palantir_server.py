@@ -6,11 +6,6 @@ import os
 
 app = Flask(__name__)
 
-# auth = UserTokenAuth(
-#     hostname="https://losaltos.palantirfoundry.com",
-#     token=os.getenv("PALANTIR_USER_TOKEN"),
-# )
-
 client = FoundryClient(auth=auth, hostname="https://losaltos.palantirfoundry.com")
 ClassifiedEmailObject = client.ontology.objects.ClassifiedEmail
 
