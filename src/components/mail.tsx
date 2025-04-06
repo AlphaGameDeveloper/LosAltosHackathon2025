@@ -44,6 +44,7 @@ interface EmailAPI {
 interface MailItem {
   id: string
   name: string
+  email: string
   subject: string
   date: string
   text: string
@@ -63,19 +64,81 @@ export function Mail({
   React.useEffect(() => {
     const fetchEmails = async () => {
       try {
-        console.log(`[📤] Sending request to http://127.0.0.1:5000/`)
-        const res = await fetch("http://127.0.0.1:5000/")
-        const data = await res.json()
+        var data; // Declare data variable here for scoping :3
+        const endpoint = "https://spam-assassin.boisvert.org:3000/?fromLogin=1"
+        console.log(`[📤] Sending request to ${endpoint}`)
+        const params = new URLSearchParams(window.location.search);
+        console.log(`[🔍] Search params:`, params)
+        if (!params.has("panic")) {
+          console.log(`[✅] Panic mode is disabled, fetching data from ${endpoint}`)
+          const res = await fetch(endpoint)
+          data = await res.json()
+          // dummy data
+          if (!res.ok) {
+            throw new Error("Network response was not ok")
+          }
+        } else {
+          console.warn(`[⚠️] Panic mode is enabled, using dummy data`)
+          data = [
+            { num: 5 }, // First item with total count
+            { 
+              title: "Welcome Email",
+              body: "Thank you for signing up! We're excited to have you on board.",
+              classification: "not-spam",
+              from: "welcome@company.com",
+              subject: "Welcome to Our Platform",
+              timestamp: "2023-11-10T09:30:00Z",
+              to: "user@example.com"
+            },
+            { 
+              title: "Special Offer",
+              body: "LIMITED TIME OFFER: Get 50% off all products this weekend only! Click here to claim your discount now before it expires!",
+              classification: "spam",
+              from: "marketing@deals.com",
+              subject: "URGENT: Your Special Discount Inside",
+              timestamp: "2023-11-09T14:22:00Z",
+              to: "user@example.com"
+            },
+            { 
+              title: "Meeting Reminder",
+              body: "This is a reminder that we have a team meeting tomorrow at 10:00 AM in Conference Room A. Please bring your project updates.",
+              classification: "not-spam",
+              from: "manager@company.com",
+              subject: "Tomorrow's Team Meeting",
+              timestamp: "2023-11-08T16:45:00Z",
+              to: "user@example.com"
+            },
+            { 
+              title: "Account Verification",
+              body: "Please verify your account by clicking the link below. Your account will be locked if you don't verify within 24 hours.",
+              classification: "not-spam",
+              from: "security@service.com",
+              subject: "Action Required: Verify Your Account",
+              timestamp: "2023-11-10T07:15:00Z",
+              to: "user@example.com"
+            },
+            { 
+              title: "Prize Winner",
+              body: "Congratulations! You have won $1,000,000 in our lottery. Send your bank details to claim now!",
+              classification: "spam",
+              from: "lottery@winners.com",
+              subject: "YOU WON! $1,000,000 Prize Awaits",
+              timestamp: "2023-11-07T23:10:00Z",
+              to: "user@example.com"
+            }
+          ]
+        }
         console.log(`[📥] Received response:`, data)
 
         const count = data[0].num
         const newEmails: EmailAPI[] = data.slice(1)
 
         if (count > lastCount) {
-          const diff = count - lastCount
+          const diff = count - lastCount;
           const added = newEmails.slice(-diff).map((e, i) => ({
             id: String(emails.length + i),
             name: e.from,
+            email: e.from,
             subject: e.subject,
             date: new Date().toISOString(),
             text: e.body,
