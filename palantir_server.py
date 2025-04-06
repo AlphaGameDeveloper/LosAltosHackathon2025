@@ -2,12 +2,13 @@ from flask import Flask, request, jsonify
 from ctsd_sdk.types import ActionConfig, ActionMode, ValidationResult, ReturnEditsMode
 from ctsd_sdk import FoundryClient
 from foundry_sdk_runtime.auth import UserTokenAuth
+import os
 
 app = Flask(__name__)
 
 auth = UserTokenAuth(
     hostname="https://losaltos.palantirfoundry.com",
-    token="eyJwbG50ciI6ImFaalR4SFVGTWdPUExtWEpyUThwWVE9PSIsImFsZyI6IkVTMjU2In0.eyJleHAiOjE3NDM5NDgyOTgsInNpZCI6Ik1NZGFnTWpOU0dxVlhwMUNndm1MU1E9PSIsInN1YiI6Im5zbjFLbTdpUlNtRWJkQVNWNkZRZ3c9PSIsIm9yZyI6Ikh5MnFYdGNFU2ZPVzg1d3dWMkVpSXc9PSJ9.OG8YDpY3dzJFFRJwiu5_Nya25VU0vnfsXwQYieHomncltYUm7hDrna9BRDLZVNRoRhF8ZVKAceHVvyUQnTODwQ"
+    token=os.getenv("PALANTIR_USER_TOKEN"),
 )
 
 client = FoundryClient(auth=auth, hostname="https://losaltos.palantirfoundry.com")
