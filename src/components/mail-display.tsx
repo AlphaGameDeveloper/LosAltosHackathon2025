@@ -46,9 +46,10 @@ interface MailDisplayProps {
 export function MailDisplay({ mail }: MailDisplayProps) {
   const today = new Date()
   const [spamReason, setSpamReason] = useState("")
+  const [isSpamApi, setIsSpamApi] = useState<number | null>(null)
 
   useEffect(() => {
-    if (mail && mail.classification === "spam" && mail.uuid) {
+    if (mail && mail.uuid) {
       const fetchSpamReason = async () => {
         try {
           setSpamReason("Loading reason...")
@@ -68,11 +69,38 @@ export function MailDisplay({ mail }: MailDisplayProps) {
         }
       }
 
+      const fetchIsSpam = async () => {
+        try {
+          const response = await fetch(
+            `http://127.0.0.1:5000/api/emails/${mail.uuid}/is-it-spam`
+          )
+          const data = await response.json()
+          if (data.ok) {
+            setIsSpamApi(data.data.answer)
+          } else {
+            console.error("Error fetching spam status:", data)
+            setIsSpamApi(null)
+          }
+        } catch (error) {
+          console.error("Error fetching spam status:", error)
+          setIsSpamApi(null)
+        }
+      }
+
       fetchSpamReason()
+      fetchIsSpam()
     } else {
       setSpamReason("No reason because it's not spam") // Clear the reason if the mail is not spam or null
+      setIsSpamApi(null)
     }
   }, [mail])
+
+  let spamLabelColor = "bg-green-500" // Default to not spam
+  if (isSpamApi === 1) {
+    spamLabelColor = "bg-red-500"
+  } else if (isSpamApi === 0) {
+    spamLabelColor = "bg-yellow-500"
+  }
 
   return (
     <>
@@ -232,6 +260,9 @@ export function MailDisplay({ mail }: MailDisplayProps) {
                   <div className="line-clamp-1 text-xs">
                     <span className="font-medium">Reply-To:</span> {mail.email}
                   </div>
+                  <div className="line-clamp-1 text-xs">
+                    <span className="font-medium">Internal-ID:</span> {mail.uuid}
+                  </div>
                 </div>
               </div>
               {mail.date && (
@@ -242,7 +273,15 @@ export function MailDisplay({ mail }: MailDisplayProps) {
             </div>
             <Separator className="mt-auto" />
             <div className="flex items-start gap-4 text-sm">
-              <SpamLabel isSpam={mail.classification == "spam"} />
+              <div className={`${spamLabelColor} text-white px-2 py-1 rounded`}>
+                {isSpamApi === 1
+                  ? "Spam"
+                  : isSpamApi === 2
+                  ? "Not Spam"
+                  : isSpamApi === 0
+                  ? "Unsure"
+                  : "Checking..."}
+              </div>
               {spamReason ? `Reason: ${spamReason}` : "Reason"}
             </div>
             <Separator className="mt-auto" />
