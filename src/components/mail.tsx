@@ -20,7 +20,7 @@ import { TooltipProvider } from "@/components/ui/tooltip"
 import { AccountSwitcher } from "@/components/account-switcher"
 import { MailDisplay } from "@/components/mail-display"
 import { MailList } from "@/components/mail-list"
-import { MailLoadingAnimation } from "@/components/mail-loading-animation"
+import { MailLoadingAnimation } from "@/components/ui/mail-loading-animation"
 import { useMail } from "../app/use-mail"
 
 interface MailProps {
